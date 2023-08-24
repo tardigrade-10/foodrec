@@ -1,0 +1,10 @@
+Flow and services
+
+1. Image capture - frontend using react-native-camera
+2. Food dish recognition - backend using google vision ai, web detection + image labeling
+3. Food dish nutrients - backend using Ninjas api
+4. Food dish recipe - backend using openai api
+5. Food dish origin - backend using openai api
+6. Menu text recognition - backend using google vision ai, text_detection
+7. Menu dishes segregation - backend using openai api
+8. details display - frontend
