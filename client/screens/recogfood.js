@@ -3,6 +3,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import { useNavigation } from '@react-navigation/native';
+// const fs = require('file-system');
+import * as FileSystem from 'expo-file-system';
+import axios from "axios";
+
 
 export default function RecogniseFoodScreen() {
     const [type, setType] = useState(CameraType.back);
@@ -46,8 +50,11 @@ export default function RecogniseFoodScreen() {
         if (cameraRef) {
             try {
                 const data = await cameraRef.current.takePictureAsync();
+                console.log('test')
                 console.log(data);
+
                 setImage(data.uri);
+                console.log(data.uri)
 
                 // Send the captured image to the backend for analysis
                 await sendImageToBackend(data.uri);
@@ -59,32 +66,30 @@ export default function RecogniseFoodScreen() {
 
     const sendImageToBackend = async (imageUri) => {
         try {
-            // const formData = new FormData();
-            // formData.append('file', {
-            //     uri: imageUri, 
-            //     type: 'image/jpeg', // Adjust the type based on your image format
-            //     name: 'photo.jpg', // Adjust the name based on your requirements
-            // });
-            // console.log(formData)
+            const formData = new FormData();
 
-            // Make an HTTP POST request to your backend API endpoint
             const image = await fetch(imageUri);
+            console.log('this is okay')
+            console.log(image)
+
             const blob = await image.blob();
 
+            const file = new File([blob], "webcam-frame.jpg", {
+                type: "image/jpeg",
+              });
+
+            formData.append("file", file)
+            
             console.log(blob)
-
-            const formData = new FormData();
-            formData.append('image', blob, 'image.jpg');
+            console.log('this is also okay')
 
 
-            const response = await fetch(backendAPIEndpoint, {
-                method: 'POST',
-                body: formData,
+            const response = await axios.post(backendAPIEndpoint, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    // Add any additional headers if required
+                }
                 },
-            });
+            );
             console.log(response)
 
             // Handle the response from the backend here

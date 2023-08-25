@@ -20,6 +20,7 @@ def analyse_image(
 
 
     image_path = save_image(image)
+    print(image_path)
 
     analysis = food_details(image_path)  # Assuming analyse_image take the file path as argument and returns analysis
 
