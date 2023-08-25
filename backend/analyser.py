@@ -30,11 +30,11 @@ def food_details(image_path: str) -> dict:
     image = vision.Image(content=content)
 
     web_response = client.web_detection(image=image)
-    print(web_response)
+    # print(web_response)
     # label_response = client.label_detection(image=image)
 
     dish_name = detect_food_dish(web_response)
-    print(dish_name)
+    # print(dish_name)
 
     recipe = recipe_generator(dish_name)
     nutrients = _get_nutrients("1lb " + dish_name)

@@ -3,3 +3,4 @@ fastapi
 uvicorn
 python-dotenv
 google-cloud-vision
+python-multipart
