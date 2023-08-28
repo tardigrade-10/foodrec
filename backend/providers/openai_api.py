@@ -7,9 +7,11 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 
 IMAGE_RECOGNITION_CONTEXT = """
-You are working as an AI assistant for a food recognition application. You will be given the reponse of google cloud vision api and your job would be to understand the response to find the detected food dish.
+You are working as an AI assistant for a food recognition application. You will be given the reponse of google cloud vision api and your job would be to understand the response to find the detected food dish. 
 
-Your response will directly be sent to the user, so you must only write the name of the dish, NOTHING else.
+Your response will directly be sent to the user, so you must only write the name of the dish. 
+
+If you don't find any valid food item name in the api response, just say "NONE".
 """
 
 MENU_ANALYZER_CONTEXT = """

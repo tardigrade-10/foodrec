@@ -11,12 +11,12 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.buttonText}>Recognise Food</Text>
       </TouchableOpacity>
 
-      {/* <TouchableOpacity
+      <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate('ScanMenu')}
       >
-        <Text style={styles.buttonText}>Scan Menu</Text> */}
-      {/* </TouchableOpacity> */}
+        <Text style={styles.buttonText}>Scan Menu</Text>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -2,11 +2,10 @@ import { Camera, CameraType } from 'expo-camera';
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
-import * as ImagePicker from 'expo-image-picker'
 import { useNavigation } from '@react-navigation/native';
+import client from "../api"
 
-
-export default function RecogniseFoodScreen() {
+export default function ScanMenuScreen() {
     const [type, setType] = useState(CameraType.back);
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const [image, setImage] = useState(null);
@@ -28,34 +27,6 @@ export default function RecogniseFoodScreen() {
             </View>
         );
     }
-
-    // useEffect(() => {
-    //     (async () => {
-    //         if (Platform.OS !== 'web') {
-    //             const { status } = await ImagePicker.requestMediaLibraryPermissionAsync();
-    //             if (status !== 'granted') {
-    //                 alert('need camera roll permission');
-    //             }
-    //         }
-    //     })();
-    // }, []);
-
-
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        console.log(result);
-
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-        }
-    };
-    
 
     const takePicture = async () => {
         if (cameraRef) {
@@ -83,7 +54,7 @@ export default function RecogniseFoodScreen() {
                 type: `image/${fileType}`  // or whichever type the image is
             });
 
-            navigation.navigate('FoodDetails', {photo: formData})
+            navigation.navigate('MenuDetails', {photo: formData})
 
         } catch (error) {
             console.error('Error Sending Image to Backend:', error);
@@ -117,11 +88,8 @@ export default function RecogniseFoodScreen() {
                         <Button title={'Confirm'} icon="check" onPress={() => sendImageToBackend(image, "photo")} />
                     </View>
                 ) : (
-                    <Button title={'Take Food Picture'} icon="camera" onPress={takePicture} />
+                    <Button title={'Take Menu Picture'} icon="camera" onPress={takePicture} />
                 )}
-            </View>
-            <View style={{ margin: 20 }}>
-                <Button title={'Upload'} onPress={pickImage} />
             </View>
         </View>
     );
