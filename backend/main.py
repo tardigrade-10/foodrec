@@ -34,7 +34,7 @@ def analyse_image(
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(image.file, buffer)
 
-    print(file_path)
+    # print(file_path)
 
     analysis = food_details(file_path)
 
@@ -45,7 +45,7 @@ def analyse_image(
         return {"status": 500, "message": "GPT did not provide proper response, please retry"}
 
     # Returning the analysis
-    print(analysis)
+    # print(analysis)
     return {"analysis": analysis, "status": 200, "message": "food item details fetched"}
 
 @app.post("/scan-menu")

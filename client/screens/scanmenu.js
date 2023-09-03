@@ -91,72 +91,105 @@ export default function ScanMenuScreen() {
         setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
     }
 
+    
     return (
         <View style={styles.container}>
-            <Camera style={styles.camera} type={type} ref={cameraRef}>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-                        {/* <Text style={styles.text}>Flip Camera</Text> */}
-                    </TouchableOpacity>
-                </View>
-                {image && (
-                    <Image source={{ uri: image }} style={styles.capturedImage} />
-                )}
-            </Camera>
-            <View>
-                {image ? (
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        paddingHorizontal: 50
-                    }}>
-                        <Button title={'Re-take'} icon="retweet" onPress={() => setImage(null)} />
-                        <Button title={'Confirm'} icon="check" onPress={() => sendImageToBackend(image, "photo")} />
-                    </View>
-                ) : (
-                    <Button title={'Take Menu Picture'} icon="camera" onPress={takePicture} />
-                )}
-            </View>
-            <View style={{ margin: 20 }}>
-                <Button title={'Upload'} onPress={pickImage} />
-            </View>
+          <Camera style={styles.camera} type={type} ref={cameraRef}>
+            {image && <Image source={{ uri: image }} style={styles.capturedImage} />}
+          </Camera>
+          <View>
+            {image ? (
+              <View style={styles.buttonRow}>
+                <TouchableOpacity style={styles.actionButton} onPress={() => setImage(null)}>
+                  <Text style={styles.actionButtonText}>Retake</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.actionButton} onPress={() => sendImageToBackend(image, 'photo')}>
+                  <Text style={styles.actionButtonText}>Confirm</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
+                <Text style={styles.captureButtonText}>Take a Photo</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+          <View style={styles.uploadButtonContainer}>
+            <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
+              <Text style={styles.uploadButtonText}>Upload Image</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-    );
-}
-
-const styles = StyleSheet.create({
-    container: {
+      );
+    };
+    
+    const styles = StyleSheet.create({
+      container: {
         flex: 1,
+        backgroundColor: '#F6F6F6', // Light gray background
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    camera: {
+      },
+      camera: {
         flex: 1,
         width: '100%',
         justifyContent: 'flex-end',
         alignItems: 'center',
-    },
-    buttonContainer: {
-        flexDirection: 'row',
+      },
+      captureButton: {
+        backgroundColor: '#007AFF', // Blue color
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 10,
         marginBottom: 20,
-    },
-    button: {
-        alignSelf: 'center',
-        flex: 0.1,
-        backgroundColor: 'transparent',
-        borderRadius: 5,
-        padding: 15,
-        paddingHorizontal: 20,
-        marginHorizontal: 10,
-    },
-    text: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 2,
+      },
+      captureButtonText: {
         fontSize: 18,
+        fontWeight: 'bold',
         color: 'white',
-    },
-    capturedImage: {
+        textAlign: 'center',
+      },
+      capturedImage: {
         width: '100%',
         height: '100%',
         position: 'absolute',
         zIndex: 1,
-    },
-});
+      },
+      actionButton: {
+        backgroundColor: '#007AFF',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        marginBottom: 20,
+      },
+      actionButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'white',
+        textAlign: 'center',
+      },
+      buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingHorizontal: 20,
+        marginBottom: 20,
+      },
+      uploadButtonContainer: {
+        margin: 20,
+      },
+      uploadButton: {
+        backgroundColor: '#007AFF',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+      },
+      uploadButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: 'white',
+        textAlign: 'center',
+      },
+    });

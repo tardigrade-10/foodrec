@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react
 const HomeScreen = ({ navigation }) => {
   return (
     <ImageBackground
-      source={require('../assets/home_bg.jpg')} // Add your background image source
+      source={require('../assets/home_bg.jpg')}
       style={styles.backgroundImage}
     >
       <View style={styles.container}>
@@ -24,6 +24,7 @@ const HomeScreen = ({ navigation }) => {
         >
           <Text style={styles.buttonText}>Scan Menu</Text>
         </TouchableOpacity>
+        <Text style={styles.credit}>Made with Love, by Ritwick</Text>
       </View>
     </ImageBackground>
   );
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Semi-transparent background overlay
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     padding: 20,
   },
   appTitle: {
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Semi-transparent button background
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 10,
@@ -64,6 +65,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+    textAlign: 'center',
+  },
+  credit: {
+    fontSize: 16,
+    color: 'white',
+    marginTop: 50,
+    marginBottom: 30,
     textAlign: 'center',
   },
 });

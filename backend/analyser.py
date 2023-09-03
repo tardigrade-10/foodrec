@@ -30,7 +30,7 @@ def food_details(image_path: str) -> dict:
     image = vision.Image(content=content)
 
     web_response = client.web_detection(image=image)
-    print(web_response)
+    # print(web_response)
     # label_response = client.label_detection(image=image)
 
     dish_name = detect_food_dish(web_response)
@@ -38,14 +38,12 @@ def food_details(image_path: str) -> dict:
     if "NONE" in dish_name:
         return None
     
-    print("DISH NAME:", dish_name)
+    # print("DISH NAME:", dish_name)
 
     
     recipe = recipe_generator(dish_name)
-    print('RECIPE:', recipe)
+    # print('RECIPE:', recipe)
     nutrients = _get_nutrients("1lb " + dish_name)
-    # if not nutrients:
-    #     return {"message": "Did not get nutrients for the dish"}
 
     print("GOT THE NUTRIENTS:", nutrients)
     h_and_o = history_and_origin(dish_name)
@@ -77,9 +75,9 @@ def menu_segregation(image_path: str):
         return {"status": 400, "message": "could not find any text"}
     
     try:
-        print(text[0].description)
+        # print(text[0].description)
         analysed_menu = analyze_menu(text[0].description)
-        print(analysed_menu)
+        # print(analysed_menu)
         return json.loads(analysed_menu)
     except:
         return {"status": 401, 'message': "could not understand the menu"}

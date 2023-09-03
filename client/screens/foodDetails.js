@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, ScrollView, Image, ImageBackground } from 'react-native';
 import client from '../api'
 
 export default function FoodDetailsScreen({ route }) {
@@ -30,11 +30,18 @@ export default function FoodDetailsScreen({ route }) {
 
     if (loading) {
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color="#0000ff" />
-                <Text>Fetching the details for you...</Text>
-            </View>
-        );
+            <ImageBackground
+              source={require('../assets/home_bg.jpg')} // Replace with your image path
+              style={styles2.backgroundImage}
+            >
+              <View style={styles2.container}>
+                <View style={styles2.innerContainer}>
+                  <ActivityIndicator size="large" color="#007BFF" />
+                  <Text style={styles2.text}>Fetching the details for you...</Text>
+                </View>
+              </View>
+            </ImageBackground>
+          );
     }
     if (error) {
         return (
@@ -55,47 +62,59 @@ export default function FoodDetailsScreen({ route }) {
     if (!foodDetails.analysis) {
         return null;
     };
+
     return (
         <ScrollView style={styles.container}>
             <View style={styles.contentContainer}>
                 <Text style={styles.dishName}>{foodDetails.analysis.dish_name}</Text>
 
                 {foodDetails.analysis.nutrients.length > 0 ? (
-                    <View>
+                    <View style={styles.section}>
                         <Text style={styles.sectionHeader}>Nutrient Information</Text>
-                        {Object.keys(foodDetails.analysis.nutrients[0]).map((key, index) => (
-                            <Text key={index} style={styles.nutrientItem}>
-                                {key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}: {foodDetails.analysis.nutrients[0][key]}
-                            </Text>
-                        ))}
+                        <View style={styles.table}>
+                            {Object.keys(foodDetails.analysis.nutrients[0]).map((key, index) => (
+                                <View key={index} style={styles.tableRow}>
+                                    <Text style={styles.tableCellLabel}>
+                                        {key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}: 
+                                    </Text>
+                                    <Text style={styles.tableCellValue}> 
+                                        {foodDetails.analysis.nutrients[0][key]}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
                     </View>
                 ) : (
                     <Text style={styles.noInfo}>No nutrient information available.</Text>
                 )}
 
-                <View style={styles.sectionContainer}>
+                <View style={styles.section}>
                     <Text style={styles.sectionHeader}>Ingredients to Use</Text>
-                    {Object.keys(foodDetails.analysis.recipe.ingredients).map((item, index) => (
-                        <View key={index} style={styles.ingredientItem}>
-                            <Text style={styles.ingredientTitle}>
-                                {item.charAt(0).toUpperCase() + item.slice(1)}:
-                            </Text>
-                            <Text>{foodDetails.analysis.recipe.ingredients[item]}</Text>
-                        </View>
-                    ))}
+                    <View style={styles.table}>
+                        {Object.keys(foodDetails.analysis.recipe.ingredients).map((item, index) => (
+                            <View key={index} style={styles.tableRow}>
+                                <Text style={styles.tableCellLabel}>
+                                    {item.charAt(0).toUpperCase() + item.slice(1)}:
+                                </Text>
+                                <Text style={styles.tableCellValue}>
+                                    {foodDetails.analysis.recipe.ingredients[item]}
+                                </Text>
+                            </View>
+                        ))}
+                    </View>
                 </View>
 
-                <View style={styles.sectionContainer}>
+                <View style={styles.section}>
                     <Text style={styles.sectionHeader}>Steps to Follow</Text>
                     {foodDetails.analysis.recipe.steps.map((step, index) => (
-                        <View key={index} style={styles.stepItem}>
+                        <View key={index} style={styles.stepBox}>
                             <Text style={styles.stepTitle}>Step {index + 1}:</Text>
                             <Text>{step}</Text>
                         </View>
                     ))}
                 </View>
 
-                <View style={styles.sectionContainer}>
+                <View style={styles.section}>
                     <Text style={styles.sectionHeader}>Origin</Text>
                     <Text>{foodDetails.analysis.history.origin}</Text>
                     <Text style={styles.historyHeader}>History</Text>
@@ -104,14 +123,12 @@ export default function FoodDetailsScreen({ route }) {
             </View>
         </ScrollView>
     );
-
-}
-
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#f7f7f7',
     },
     contentContainer: {
         padding: 20,
@@ -119,43 +136,89 @@ const styles = StyleSheet.create({
     dishName: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 15,
+        marginBottom: 10,
     },
-    sectionContainer: {
+    section: {
         marginBottom: 20,
     },
     sectionHeader: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10,
+        color: '#333',
     },
-    nutrientItem: {
-        fontSize: 16,
+    table: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 5,
+        padding: 10,
+        backgroundColor: '#fff',
+    },
+    tableRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         marginBottom: 5,
+    },
+    tableCellLabel: {
+        fontWeight: 'bold',
+    },
+    tableCellValue: {
+        flex: 1,
     },
     noInfo: {
         fontSize: 16,
-        color: 'gray',
-        marginBottom: 20,
+        fontStyle: 'italic',
+        color: '#888',
     },
-    ingredientItem: {
-        marginBottom: 15,
-    },
-    ingredientTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    stepItem: {
-        marginBottom: 15,
+    stepBox: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 5,
+        padding: 10,
+        backgroundColor: '#fff',
+        marginBottom: 10,
     },
     stepTitle: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
+        marginBottom: 5,
     },
     historyHeader: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'bold',
-        marginTop: 15,
+        marginTop: 10,
     },
 });
+
+const styles2 = StyleSheet.create({
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    },
+    innerContainer: {
+      backgroundColor: '#FFFFFF',
+      padding: 20,
+      borderRadius: 10,
+      alignItems: 'center',
+      shadowColor: '#000000',
+      shadowOffset: {
+        width: 0,
+        height: 4,
+      },
+      shadowOpacity: 0.4,
+      shadowRadius: 5,
+      elevation: 5,
+    },
+    text: {
+      marginTop: 10,
+      fontSize: 16,
+      color: '#333',
+    },
+  });
 
