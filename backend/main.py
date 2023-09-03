@@ -28,8 +28,7 @@ def root():
 @app.post("/analyse")
 def analyse_image(
                 image: UploadFile = File(...),
-                #   uri = None
-                  ): 
+            ): 
     file_path = f"storage/{uuid.uuid1()}.jpg"
 
     with open(file_path, "wb") as buffer:
@@ -40,7 +39,10 @@ def analyse_image(
     analysis = food_details(file_path)
 
     if analysis == None:
-        return {"status": 400, "message": "Could not find a food tem in the image"}
+        return {"status": 400, "message": "Could not find a food item in the image."}
+
+    if analysis.get("message") and analysis["message"] == "json loading failed":
+        return {"status": 500, "message": "GPT did not provide proper response, please retry"}
 
     # Returning the analysis
     print(analysis)
@@ -53,9 +55,12 @@ def menu_analysis(image: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(image.file, buffer)
 
-    result = menu_segregation(file_path)
+    analysis = menu_segregation(file_path)
+    
+    if analysis.get("status"):
+        return analysis
 
-    return {"result": result, "status": 200, "message": "menu details fetched"}
+    return {"analysis": analysis, "status": 200, "message": "menu details fetched"}
 
 
 if __name__ == "__main__":

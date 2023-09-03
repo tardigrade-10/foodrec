@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Text, View, ScrollView } from 'react-native';
+import { ActivityIndicator, StyleSheet, FlatList, Text, View, ScrollView, Image } from 'react-native';
 import client from '../api'
 
 export default function MenuDetailsScreen({ route }) {
@@ -16,7 +16,7 @@ export default function MenuDetailsScreen({ route }) {
                         'Content-Type': 'multipart/form-data'
                     }
                 });
-                setMenuDetails(response.data.result);
+                setMenuDetails(response.data);
                 console.log(response.data)
             } catch (error) {
                 console.error('There was an error with the request', error);
@@ -44,56 +44,55 @@ export default function MenuDetailsScreen({ route }) {
         );
     }
 
-    if (!menuDetails) {
+    if (menuetails && menuDetails.status === 400 || menuDetails.status === 401) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ color: 'red' }}>{menuDetails.message}</Text>
+            </View>
+        );
+    }
+
+    if (!menuDetails.analysis) {
         return null;
       };
       
       return (
-        <View>
-          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-              {JSON.stringify(menuDetails)}
-        </Text>
+        <View style={styles.container}>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionHeader}>Healthy Menu</Text>
+            <FlatList
+              data={menuDetails.analysis.healthy}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+            />
+          </View>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionHeader}>Unhealthy Menu</Text>
+            <FlatList
+              data={menuDetails.analysis.unhealthy}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => <Text style={styles.item}>{item}</Text>}
+            />
+          </View>
         </View>
       );
+};
 
-    //   return (
-    //     <ScrollView>
-    //         <View>
-    //             <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
-    //                 {foodDetails.nutrients[0].name}
-    //             </Text>
-    
-    //             {Object.keys(foodDetails.nutrients[0]).map((key) => 
-    //                 <Text style={{ marginBottom: 10 }}>
-    //                     {key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ')}: {foodDetails.nutrients[0][key]}
-    //                 </Text>
-    //             )}
-    
-    //             <View>
-    //                 {Object.keys(foodDetails.recipe).map((step) => 
-    //                     <View style={{ marginBottom: 15 }}>
-    //                         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-    //                             {step.charAt(0).toUpperCase() + step.slice(1)}:
-    //                         </Text>
-    //                         <Text>
-    //                             {foodDetails.recipe[step]}
-    //                         </Text>
-    //                     </View>
-    //                 )}
-    //             </View>
-    
-    //             <View>
-    //                 <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
-    //                     Origin
-    //                 </Text>
-    //                 <Text>{foodDetails.history.origin}</Text>
-    
-    //                 <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10, marginTop: 15 }}>
-    //                     History
-    //                 </Text>
-    //                 <Text>{foodDetails.history.history}</Text>
-    //             </View>
-    //         </View>
-    //     </ScrollView>
-    // );
-}
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+    },
+    sectionContainer: {
+      marginBottom: 20,
+    },
+    sectionHeader: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    item: {
+      fontSize: 16,
+      marginBottom: 5,
+    },
+  });

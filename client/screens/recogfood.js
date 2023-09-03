@@ -1,25 +1,35 @@
 import { Camera, CameraType } from 'expo-camera';
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View, Image, Platform } from 'react-native';
 import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker'
 import { useNavigation } from '@react-navigation/native';
 
-
 export default function RecogniseFoodScreen() {
     const [type, setType] = useState(CameraType.back);
-    const [permission, requestPermission] = Camera.useCameraPermissions();
+    const [hasPermission, setHasPermission] = useState(null);
     const [image, setImage] = useState(null);
     MediaLibrary.requestPermissionsAsync();
     const cameraRef = useRef(null);
     const navigation = useNavigation();
 
-    if (!permission) {
+    useEffect(() => {
+        (async () => {
+            if (Platform.OS !== 'web') {
+                const { status } = await Camera.requestCameraPermissionsAsync();
+                setHasPermission(status === 'granted');
+                const mediaLibPermission = await MediaLibrary.requestPermissionsAsync();
+                setHasPermission(mediaLibPermission.status === 'granted');
+            }
+        })();
+    }, []);
+
+    if (hasPermission === null) {
         // Camera permissions are still loading
         return <View />;
     }
 
-    if (!permission.granted) {
+    if (hasPermission === false) {
         // Camera permissions are not granted yet
         return (
             <View style={styles.container}>
@@ -28,18 +38,6 @@ export default function RecogniseFoodScreen() {
             </View>
         );
     }
-
-    // useEffect(() => {
-    //     (async () => {
-    //         if (Platform.OS !== 'web') {
-    //             const { status } = await ImagePicker.requestMediaLibraryPermissionAsync();
-    //             if (status !== 'granted') {
-    //                 alert('need camera roll permission');
-    //             }
-    //         }
-    //     })();
-    // }, []);
-
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -56,7 +54,6 @@ export default function RecogniseFoodScreen() {
         }
     };
     
-
     const takePicture = async () => {
         if (cameraRef) {
             try {
@@ -78,7 +75,7 @@ export default function RecogniseFoodScreen() {
             let fileType = imageUri.substring(imageUri.lastIndexOf(".") + 1);  
 
             formData.append('image', {  // attaching the image file
-                uri: imageUri,
+                uri: Platform.OS === 'android' ? imageUri : imageUri.replace('file://', ''),
                 name: `${imageName}.${fileType}`,
                 type: `image/${fileType}`  // or whichever type the image is
             });
@@ -90,76 +87,86 @@ export default function RecogniseFoodScreen() {
         }
     };
 
-    function toggleCameraType() {
-        setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
-    }
-
-    return (
-        <View style={styles.container}>
-            <Camera style={styles.camera} type={type} ref={cameraRef}>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-                        {/* <Text style={styles.text}>Flip Camera</Text> */}
-                    </TouchableOpacity>
-                </View>
-                {image && (
-                    <Image source={{ uri: image }} style={styles.capturedImage} />
-                )}
-            </Camera>
-            <View>
-                {image ? (
-                    <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        paddingHorizontal: 50
-                    }}>
-                        <Button title={'Re-take'} icon="retweet" onPress={() => setImage(null)} />
-                        <Button title={'Confirm'} icon="check" onPress={() => sendImageToBackend(image, "photo")} />
-                    </View>
-                ) : (
-                    <Button title={'Take Food Picture'} icon="camera" onPress={takePicture} />
-                )}
-            </View>
-            <View style={{ margin: 20 }}>
-                <Button title={'Upload'} onPress={pickImage} />
-            </View>
-        </View>
-    );
-}
+    
+  return (
+    <View style={styles.container}>
+      <Camera style={styles.camera} type={type} ref={cameraRef}>
+        {image && <Image source={{ uri: image }} style={styles.capturedImage} />}
+      </Camera>
+      <View>
+        {image ? (
+          <View style={styles.buttonRow}>
+            <Button title="Re-take" onPress={() => setImage(null)} />
+            <Button title="Confirm" onPress={() => sendImageToBackend(image, 'photo')} />
+          </View>
+        ) : (
+          <TouchableOpacity style={styles.bigButton} onPress={takePicture}>
+            <Text style={styles.buttonText}>Take Food Picture</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <View style={styles.uploadButtonContainer}>
+        <TouchableOpacity style={styles.bigButton} onPress={pickImage}>
+          <Text style={styles.buttonText}>Upload</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    camera: {
-        flex: 1,
-        width: '100%',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        marginBottom: 20,
-    },
-    button: {
-        alignSelf: 'center',
-        flex: 0.1,
-        backgroundColor: 'transparent',
-        borderRadius: 5,
-        padding: 15,
-        paddingHorizontal: 20,
-        marginHorizontal: 10,
-    },
-    text: {
-        fontSize: 18,
-        color: 'white',
-    },
-    capturedImage: {
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-        zIndex: 1,
-    },
+  container: {
+    flex: 1,
+    backgroundColor: 'rgba(110, 38, 14, 1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  camera: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  button: {
+    alignSelf: 'center',
+    flex: 0.1,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 5,
+    padding: 15,
+    paddingHorizontal: 20,
+    marginHorizontal: 10,
+    marginVertical: 10,
+  },
+  bigButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  buttonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+  },
+  capturedImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    zIndex: 1,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 50,
+    marginBottom: 20,
+  },
+  uploadButtonContainer: {
+    margin: 20,
+  },
 });

@@ -29,17 +29,15 @@ FORMAT: json
 """
 
 FOOD_DISH_RECIPE_PROMPT = """
-You are working as an AI assistant for a food dish description application. You will be given the the name of a dish and your job would be to provide the recipe of the dish for one serving.
+You are working as an AI assistant for a food dish description application. You will be given the name of a dish and your job would be to provide the recipe of the dish for one serving.
 
 As your response will be directly used in the application, you must stick to the format of your response.
 
 FORMAT: json
 
 {
-    "step1" : [sub steps],
-    "step2" : [sub steps],
-    ...
-    "stepn" : [sub steps]
+    "ingredients" : {<name of ingredient>: <quantity>},
+    "steps" : <steps in a list>,
 }
 
 """
