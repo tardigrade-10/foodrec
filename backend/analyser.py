@@ -45,9 +45,9 @@ def food_details(image_path: str) -> dict:
     # print('RECIPE:', recipe)
     nutrients = _get_nutrients("1lb " + dish_name)
 
-    print("GOT THE NUTRIENTS:", nutrients)
+    # print("GOT THE NUTRIENTS:", nutrients)
     h_and_o = history_and_origin(dish_name)
-    print('HISTORY:', h_and_o)
+    # print('HISTORY:', h_and_o)
 
     try:
         nutri = json.loads(nutrients)

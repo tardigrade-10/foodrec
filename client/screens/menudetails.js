@@ -17,7 +17,7 @@ export default function MenuDetailsScreen({ route }) {
                     }
                 });
                 setMenuDetails(response.data);
-                console.log(response.data)
+                // console.log(response.data)
             } catch (error) {
                 console.error('There was an error with the request', error);
                 setError(error.message);
@@ -38,6 +38,7 @@ export default function MenuDetailsScreen({ route }) {
             <View style={styles2.innerContainer}>
               <ActivityIndicator size="large" color="#007BFF" />
               <Text style={styles2.text}>Fetching the details for you...</Text>
+              <Text style={styles2.textinfo}>Usually takes 20 seconds to fetch the details</Text>
             </View>
           </View>
         </ImageBackground>
@@ -169,6 +170,12 @@ export default function MenuDetailsScreen({ route }) {
     text: {
       marginTop: 10,
       fontSize: 16,
+      color: '#333',
+    },
+    textinfo: {
+      marginTop: 15,
+      fontSize: 14,
+      fontStyle: 'italic',
       color: '#333',
     },
   });

@@ -47,7 +47,7 @@ export default function RecogniseFoodScreen() {
             quality: 1,
         });
 
-        console.log(result);
+        // console.log(result);
 
         if (!result.canceled) {
             setImage(result.assets[0].uri);
@@ -58,8 +58,8 @@ export default function RecogniseFoodScreen() {
         if (cameraRef) {
             try {
                 const data = await cameraRef.current.takePictureAsync();
-                console.log('test')
-                console.log(data);
+                // console.log('test')
+                // console.log(data);
 
                 setImage(data.uri);
 

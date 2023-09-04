@@ -17,7 +17,7 @@ export default function FoodDetailsScreen({ route }) {
                     }
                 });
                 setFoodDetails(response.data);
-                console.log(response.data)
+                // console.log(response.data)
             } catch (error) {
                 console.error('There was an error with the request', error);
                 setError(error.message);
@@ -38,6 +38,7 @@ export default function FoodDetailsScreen({ route }) {
                 <View style={styles2.innerContainer}>
                   <ActivityIndicator size="large" color="#007BFF" />
                   <Text style={styles2.text}>Fetching the details for you...</Text>
+                  <Text style={styles2.textinfo}>Usually takes 60 seconds to fetch the details</Text>
                 </View>
               </View>
             </ImageBackground>
@@ -64,7 +65,12 @@ export default function FoodDetailsScreen({ route }) {
     };
 
     return (
+        <ImageBackground
+          source={require('../assets/home_bg.jpg')} // Replace with your image path
+          style={styles2.backgroundImage}
+        >
         <ScrollView style={styles.container}>
+            
             <View style={styles.contentContainer}>
                 <Text style={styles.dishName}>{foodDetails.analysis.dish_name}</Text>
 
@@ -122,6 +128,7 @@ export default function FoodDetailsScreen({ route }) {
                 </View>
             </View>
         </ScrollView>
+            </ImageBackground>
     );
 };
 
@@ -194,12 +201,13 @@ const styles2 = StyleSheet.create({
     backgroundImage: {
       flex: 1,
       resizeMode: 'cover',
+    //   opacity: 0
     },
     container: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+      backgroundColor: 'rgba(100, 0, 0, 0.5)', 
     },
     innerContainer: {
       backgroundColor: '#FFFFFF',
@@ -218,6 +226,12 @@ const styles2 = StyleSheet.create({
     text: {
       marginTop: 10,
       fontSize: 16,
+      color: '#333',
+    },
+    textinfo: {
+      marginTop: 15,
+      fontSize: 14,
+      fontStyle: 'italic',
       color: '#333',
     },
   });
