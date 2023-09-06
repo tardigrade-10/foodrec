@@ -5,6 +5,7 @@ Flow and services
 3. Food dish nutrients - backend using Ninjas api
 4. Food dish recipe - backend using openai api
 5. Food dish origin - backend using openai api
+6. Details Display for Food dish - frontend
 6. Menu text recognition - backend using google vision ai, text_detection
 7. Menu dishes segregation - backend using openai api
-8. details display - frontend
+8. Details Display for Menu - frontend

@@ -1,3 +1,16 @@
+## Project Abstract 
+#### Features
+1. Food Dish Recognition
+2. Nutritional Values 
+3. Recipe of the dish
+4. History and origin of the dish
+5. Menu dishes segregation into healthy and unhealthy
+
+#### Tech-stack
+1. React-native for frontend
+2. Expo for App bundling and Mobile hosting
+3. Python FastAPI for backend
+
 ## Setting up - 
 
 #### Backend -
@@ -38,7 +51,7 @@ GOOGLE_APPLICATION_CREDENTIALS=<path-to-credentials-file>
 NINJAS_API_KEY=<your-api-key>
 ```
 
-### Setting up backend project -
+### Starting backend project -
 ```
 # open a new terminal 
 cd backend
@@ -47,11 +60,11 @@ python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 ``` 
 
-### Setting up frontend project -
+### Starting frontend project -
 1. Installation
 ```
 # open a new terminal 
-cd frontend
+cd client
 npm install
 ```
 2. Get your network ip address by running this command in your terminal
@@ -63,7 +76,7 @@ ipconfig getifaddr en0
 ```
 npx expo start
 ```
-5. This will run the app in the computer and provide you steps to run the app in the phone.
+5. This will run the app in the computer and provide you the steps to run the app in the phone.
 
 
 
